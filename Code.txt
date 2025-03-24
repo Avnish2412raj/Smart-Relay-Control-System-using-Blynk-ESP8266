@@ -1,0 +1,46 @@
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+#define BLYNK_TEMPLATE_ID "......"
+#define BLYNK_TEMPLATE_NAME "......"
+#define BLYNK_AUTH_TOKEN "......."
+#define BLYNK_PRINT Serial
+
+// Your WiFi credentials
+char ssid[] = "......."; // Your WiFi SSID
+char pass[] = ".......";  // Your WiFi password
+
+// Define relay pins
+#define RELAY1 0 // Relay 1 connected to GPIO0
+#define RELAY2 2 // Relay 2 connected to GPIO2
+
+void setup() {
+  // Debug console
+  Serial.begin(115200);
+
+  // Set relay pins as output
+  pinMode(RELAY1, OUTPUT);
+  pinMode(RELAY2, OUTPUT);
+
+  // Initialize relays to OFF
+  digitalWrite(RELAY1, HIGH);
+  digitalWrite(RELAY2, HIGH);
+
+  // Connect to Blynk server
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+}
+
+void loop() {
+  Blynk.run(); // Run Blynk
+}
+
+// Blynk virtual pin assignments to control relays
+BLYNK_WRITE(V1) { // Relay 1 control
+  int pinValue = param.asInt();
+  digitalWrite(RELAY1, pinValue ? LOW : HIGH);
+}
+
+BLYNK_WRITE(V2) { // Relay 2 control
+  int pinValue = param.asInt();
+  digitalWrite(RELAY2, pinValue ? LOW : HIGH);
+}
